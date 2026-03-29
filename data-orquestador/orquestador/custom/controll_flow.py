@@ -20,7 +20,7 @@ def transform_custom(*args, **kwargs):
     month = kwargs.get('month', 12)
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
-    if not (year == 2018 and month == 12):
+    if int(year) <= 2020:
         next_month = int(month) + 1
         next_year = int(year)
 
