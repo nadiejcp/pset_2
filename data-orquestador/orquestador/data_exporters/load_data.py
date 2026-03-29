@@ -23,7 +23,7 @@ def export_data(data, *args, **kwargs):
         Optionally return any object and it'll be logged and
         displayed when inspecting the block run.
     """
-    if not data:
+    if isinstance(data, bool):
         return False
     year = kwargs.get('year')
     month = kwargs.get('month')
