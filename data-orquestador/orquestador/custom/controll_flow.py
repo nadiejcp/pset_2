@@ -22,7 +22,7 @@ def transform_custom(*args, **kwargs):
     config_profile = 'default'
     if not (year == 2018 and month == 12):
         next_month = int(month) + 1
-        next_year = year
+        next_year = int(year)
 
         if next_month > 12:
             next_month = 1
