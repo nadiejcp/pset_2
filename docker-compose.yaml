@@ -1,0 +1,38 @@
+services:
+
+  data_warehouse:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=data_warehouse
+    volumes:
+      - warehouse_volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d data_warehouse"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  warehouse_ui:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=nadiejcp@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - "9000:80"
+
+  orquestador:
+    image: mageai/mageai
+    volumes:
+      - ./data-orquestador:/home/src
+    ports:
+      - "6789:6789"
+    command: /app/run_app.sh mage start orquestador
+
+volumes:
+  warehouse_volume:
+  data-orquestador:
