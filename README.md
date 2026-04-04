@@ -1,10 +1,10 @@
-## 📌 Overview
+## Overview
 
 Este proyecto implementa un flujo completo de ingeniería de datos, desde la ingesta hasta el modelado analítico, utilizando pipelines automatizados y un modelo dimensional tipo estrella.
 
 El objetivo es procesar datos históricos de viajes (2015–2020), limpiarlos, transformarlos y prepararlos para análisis eficientes.
 
-## ⚙️ Arquitectura
+## Arquitectura
 
 El flujo general del proyecto es:
 
@@ -12,66 +12,84 @@ El flujo general del proyecto es:
 ### Fuente: URL externa
 ### Descarga de datos por lotes
 
-### 📥 Pipeline 1: Ingesta de datos
-Extracción desde la fuente
-Limpieza básica (nombres de columnas)
-Carga en base de datos (schema raw)
+### Pipeline 1: Ingesta de datos
+1. Extracción desde la fuente
+2. Limpieza básica (nombres de columnas)
+3. Carga en base de datos (schema raw)
 
-### 🔁 Pipeline 2: Transformación
-Extracción desde raw
-Transformaciones y validaciones
-Carga en schema clean
-Orquestación
-Procesamiento mensual
-Ejecución automática mediante triggers
-Periodo: enero 2015 → diciembre 2020
+### Pipeline 2: Transformación
+1. Extracción desde raw
+2. Transformaciones y validaciones
+3. Carga en schema clean
+4. Orquestación
+5. Procesamiento mensual
+6. Ejecución automática mediante triggers
+7. Periodo: enero 2015 → diciembre 2020
 
-## 🧹 Transformaciones aplicadas
+## Transformaciones aplicadas
 
 Se implementaron las siguientes reglas de limpieza y validación:
 
 Manejo de valores nulos
+
 Eliminación o tratamiento de duplicados
+
 Normalización de tipos de datos
+
 Estandarización de nombres de columnas
+
 Validación de fechas y timestamps
+
 Filtrado de registros imposibles o erróneos
+
 Consistencia entre pickup y dropoff
+
 Validación de métricas:
+
 Distancia
+
 Monto total
+
 Duración del viaje
-🗓️ Procesamiento temporal
+
+Procesamiento temporal
+
 Los datos se procesan mensualmente
+
 Al finalizar un mes, se activa automáticamente el siguiente
+
 Rango de datos:
+
 Inicio: Enero 2015
+
 Fin: Diciembre 2020
 
-## 🗄️ Modelo de datos
+## Modelo de datos
 
 Se implementó un modelo dimensional tipo estrella:
 
 Tabla de hechos: fact_trips
+
 Dimensiones:
 dim_date
 dim_location
 dim_vendor
 dim_rate
 dim_payment
+
 Granularidad
 
 Un registro representa un viaje individual.
 
 Este modelo permite consultas analíticas eficientes y agregaciones rápidas.
 
-## 🛠️ Tecnologías utilizadas
-Mage (orquestación de pipelines)
-PostgreSQL (almacenamiento)
-SQL (transformaciones)
-Python (procesamiento de datos)
+## Tecnologías utilizadas
+1. Mage (orquestación de pipelines)
+2. PostgreSQL (almacenamiento)
+3. SQL (extracciones y consultas)
+4. Python (procesamiento de datos)
 
-## 📈 Objetivo
+## Objetivo
 
 Construir un pipeline robusto y escalable que permita:
 
