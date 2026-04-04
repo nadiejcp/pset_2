@@ -59,7 +59,7 @@ blocks:
   language: python
   name: clean_controller
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:

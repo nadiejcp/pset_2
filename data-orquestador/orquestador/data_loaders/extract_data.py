@@ -24,7 +24,6 @@ def load_data(*args, **kwargs):
         raise ValueError("Missing year or month or schema")
         
     table_name = f'ny_taxi_trips_{year}_{month}'
-    exists = False
     with Postgres.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
         loader.open()
         conn = loader.conn
@@ -39,12 +38,10 @@ def load_data(*args, **kwargs):
                     );
                 """)
 
-        exists = cur.fetchone()[0]
-        cur.close()
-
-    if exists:
-        print("Table already populated, skipping")
-        return False
+        exists = pd.read_sql(exists_query, conn)
+        if exists.iloc[0, 0]:
+            print("Table already populated, skipping")
+            return False
     
     base_url = "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_year-month.parquet"  
     url = base_url.replace('year', year).replace('month', month)

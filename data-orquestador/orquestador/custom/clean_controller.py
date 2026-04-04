@@ -20,14 +20,14 @@ def transform_custom(*args, **kwargs):
     month = kwargs.get('month', '12')
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
-    if int(year) <= 2020 and int(month) < 12:
-        next_month = int(month) + 1
-        next_year = int(year)
+    next_month = int(month) + 1
+    next_year = int(year)
 
-        if next_month > 12:
-            next_month = 1
-            next_year += 1
+    if next_month > 12:
+        next_month = 1
+        next_year += 1
 
+    if next_year <= 2020:
         trigger_pipeline(
             'ny_taxi_clean',
             variables={

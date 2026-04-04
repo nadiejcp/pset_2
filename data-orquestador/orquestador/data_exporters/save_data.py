@@ -2,6 +2,11 @@ if 'data_exporter' not in globals():
     from mage_ai.data_preparation.decorators import data_exporter
 
 
+from mage_ai.io.config import ConfigFileLoader
+from mage_ai.io.postgres import Postgres
+import pandas as pd
+import math
+
 @data_exporter
 def export_data(data, *args, **kwargs):
     """
@@ -15,6 +20,8 @@ def export_data(data, *args, **kwargs):
         Optionally return any object and it'll be logged and
         displayed when inspecting the block run.
     """
+    if isinstance(data, bool):
+        return False
     year = kwargs.get('year')
     month = kwargs.get('month')
     table_name = f'ny_taxi_trips_{year}_{month}'
@@ -25,6 +32,7 @@ def export_data(data, *args, **kwargs):
     size = 100000
     start = 0
     end = size
+    num_chunks = math.ceil(data.shape[0]/size)
 
     with Postgres.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
         loader.export(
@@ -35,8 +43,8 @@ def export_data(data, *args, **kwargs):
             if_exists='replace'
         )
         start = end
-        end = min(end + size, len(data))
-        for i in tqdm(range(1, num_chunks), desc="Cargando datos", unit="chunk"):
+        end = min(end + size, data.shape[0])
+        for i in range(1, num_chunks):
             loader.export(
                 data.iloc[start:end],
                 new_schema_name,
@@ -45,6 +53,6 @@ def export_data(data, *args, **kwargs):
                 if_exists='append'
             )
             start = end
-            end = min(end + size, len(data))
+            end = min(end + size, data.shape[0])
 
 

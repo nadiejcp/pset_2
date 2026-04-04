@@ -28,16 +28,16 @@ def export_data(data, *args, **kwargs):
     year = kwargs.get('year')
     month = kwargs.get('month')
     table_name = f'ny_taxi_trips_{year}_{month}'
-
-    schema_name = 'raw'
-    config_path = path.join(get_repo_path(), 'io_config.yaml')
-    config_profile = 'default'
+    
+    schema_name = kwargs.get('schema')
+    config_path = kwargs.get('config_path')
+    config_profile = kwargs.get('config_profile')
 
     size = 100000
 
     start = 0
     end = size
-    num_chunks = math.ceil(len(data)/size)
+    num_chunks = math.ceil(data.shape[0]/size)
     
     with Postgres.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
         loader.export(
@@ -48,7 +48,7 @@ def export_data(data, *args, **kwargs):
             if_exists='replace'
         )
         start = end
-        end = min(end + size, len(data))
+        end = min(end + size, data.shape[0])
         for i in tqdm(range(1, num_chunks), desc="Cargando datos", unit="chunk"):
             loader.export(
                 data.iloc[start:end],
@@ -58,4 +58,4 @@ def export_data(data, *args, **kwargs):
                 if_exists='append'
             )
             start = end
-            end = min(end + size, len(data))
+            end = min(end + size, data.shape[0])

@@ -20,14 +20,15 @@ def transform_custom(*args, **kwargs):
     month = kwargs.get('month', 12)
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
+
+    next_month = int(month) + 1
+    next_year = int(year)
+
+    if next_month > 12:
+        next_month = 1
+        next_year += 1
+
     if int(year) <= 2020:
-        next_month = int(month) + 1
-        next_year = int(year)
-
-        if next_month > 12:
-            next_month = 1
-            next_year += 1
-
         trigger_pipeline(
             'ny_taxi_dataset',
             variables={
@@ -52,5 +53,4 @@ def test_output(output, *args) -> None:
     """
     Template code for testing the output of the block.
     """
-    print(output)
     assert output is not None, 'The output is undefined'

@@ -19,17 +19,21 @@ def transform(data, *args, **kwargs):
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
+    if isinstance(data, bool):
+        return False
     data.drop_duplicates(inplace=True) # Removes duplicates
+
+    data["is_free_trip"] = (data["total_amount"] == 0) & (data["trip_distance"] > 0) # Free trips with distance > 0
+    data["is_cancelled_trip"] = (data["total_amount"] == 0) & (data["trip_distance"] == 0) # Cancelled trips with distance = 0
+    data["trip_duration"] = (data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]).dt.total_seconds() #calculate trip duration in seconds
+    
     data = data[data["trip_duration"] >= 0] # Remove trips with negative duration (dropoff before pickup)
     data = data[data["fare_amount"] >= 0] # Remove trips with negative fare amount
     data = data[data["trip_distance"] >= 0] # Remove trips with negative distance
     data.loc[data["trip_distance"] > 0, "price_per_mile"] = data["total_amount"] / data["trip_distance"] # Calculate price per mile for trips with distance > 0
     data = data[~(data['tpep_pickup_datetime'] == data['tpep_dropoff_datetime']) & (data["price_per_mile"].notna())] # Remove trips with zero duration but non-zero price per mile
 
-    data["is_free_trip"] = (data["total_amount"] == 0) & (data["trip_distance"] > 0) # Free trips with distance > 0
-    data["is_cancelled_trip"] = (data["total_amount"] == 0) & (data["trip_distance"] == 0) # Cancelled trips with distance = 0
-    data["trip_duration"] = (data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]).dt.total_seconds() #calculate trip duration in seconds
-
+    # flag possible outliers based on IQR
     q1 = data["price_per_mile"].quantile(0.25)
     q3 = data["price_per_mile"].quantile(0.75)
     iqr = q3 - q1
@@ -44,6 +48,8 @@ def transform(data, *args, **kwargs):
 
     values = data.isna().sum() / data.shape[0]
     data.drop(columns=values[values > 0.5].index, inplace=True) # Removes columns with 50% of null values
+
+    # A good practice would be to use PCA to find reads out of the normal
     return data
 
 @test
@@ -51,4 +57,5 @@ def test_output(output, *args) -> None:
     """
     Template code for testing the output of the block.
     """
-    assert output is not None, 'The output is undefined'
+    if not isinstance(output, bool):
+        assert output is not None, 'The output is undefined'
