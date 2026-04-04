@@ -29,14 +29,14 @@ def load_data(*args, **kwargs):
         conn = loader.conn
         cur = conn.cursor()
 
-        cur.execute(f"""
+        exists_query = f"""
                     SELECT EXISTS (
                         SELECT 1
                         FROM information_schema.tables 
                         WHERE table_schema = '{schema}'
                         AND table_name = '{table_name}'
                     );
-                """)
+                """
 
         exists = pd.read_sql(exists_query, conn)
         if exists.iloc[0, 0]:
