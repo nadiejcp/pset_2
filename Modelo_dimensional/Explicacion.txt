@@ -1,0 +1,5 @@
+El modelo dimensional presentado corresponde a un esquema tipo estrella, donde la tabla de hechos fact_trips almacena información detallada de cada viaje, incluyendo métricas como distancia, duración y monto total. La granularidad del modelo es un viaje individual por registro, el ID de cada tabla de trips.
+
+Las tablas de dimensiones (dim_date, dim_location, dim_vendor, dim_rate y dim_payment) proporcionan contexto descriptivo que permite analizar los datos desde diferentes perspectivas, como tiempo, ubicación, proveedor, tipo de tarifa y método de pago.
+
+Las relaciones entre la tabla de hechos y las dimensiones se establecen mediante claves foráneas, lo que facilita consultas analíticas eficientes y la agregación de información para la toma de decisiones.
