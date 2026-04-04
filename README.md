@@ -71,10 +71,10 @@ Se implementó un modelo dimensional tipo estrella:
 Tabla de hechos: fact_trips
 
 Dimensiones:
-dim_date
-dim_location
-dim_vendor
-dim_rate
+dim_date,
+dim_location,
+dim_vendor,
+dim_rate,
 dim_payment
 
 Granularidad
@@ -108,7 +108,7 @@ Facilitar análisis exploratorio y reporting
 8. Abrir el pipeline "ny_taxi_dataset" y ejecutar el archivo controll_flow.
 9. Esto creará triggers para extraer y guardar los datos como en el flujo de pipeline 1, desde enero de 2015 hasta el mes de diciembre de 2020. (Tarda aproximadamente 10 minutos por mes)
 10. Repetir el proceso para el pipeline "ny_taxi_clean" para tener datos corregidos y transformados. (Tarda aproximadamente 10 minutos por mes)
-11. Una vez que se haya completado la ejecución de los pipelines, se puede acceder a la base de datos para verificar los resultados
+11. Una vez que se haya completado la ejecución de los pipelines, se puede acceder a la base de datos para verificar los resultados en http://localhost:9000
 12. Ejecutar el comando docker-compose down para detener los servicios
 
 
